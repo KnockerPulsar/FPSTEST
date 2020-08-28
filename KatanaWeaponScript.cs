@@ -5,12 +5,15 @@ using UnityEngine.LowLevel;
 
 public class KatanaWeaponScript : BaseWeaponScript2
 {
+    public PlayerVariables pVars;
     public AnimationClip katanaShooting;
     Animator katanaAnimator;
     BoxCollider hitBox;
     PlayerMovementScript playerMovement;
     Vector3 dashFinal;
     Camera playerCam;
+    RaycastHit[] hitObjects;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +38,12 @@ public class KatanaWeaponScript : BaseWeaponScript2
             //If a dash gets the player in the air (off a ledge for example), the player is launched at a very high speed. Also, any vertical movment cause massive velocity changes due to the lack of countermovement 
             //A possible solution is to implement a separate countermovement function just for this.
             //KatanaDash();
+            hitObjects = Physics.RaycastAll(pVars.playerCam.transform.position, pVars.playerCam.transform.forward, base.range);
+            if(hitObjects.Length > 0 && hitObjects[0].transform.gameObject.CompareTag("Enemy"))
+            {
+                print("Enemy hit");
+                Destroy(hitObjects[0].transform.gameObject);
+            }
 
             katanaAnimator.Play("KatanaSlice");
             katanaAnimator.Play("KatanaSlice", -1, 0);
@@ -56,6 +65,7 @@ public class KatanaWeaponScript : BaseWeaponScript2
             if (other.gameObject.CompareTag("Enemy"))
             {
                 print("Enemy hit");
+                Destroy(other.gameObject);
             }
             else
                 print("Other hit");

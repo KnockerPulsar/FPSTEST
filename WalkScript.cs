@@ -86,9 +86,9 @@ public class WalkScript : MonoBehaviour
         {
             //Only applies the force when the player isn't inputting movement in any of the axis, only applies to that axis
             if (x == 0 && Mag.x != 0)
-                pVars.playerRB.AddForce(moveForce * pVars.playerRB.mass * transform.right * Time.deltaTime * -Mag.x * countermovementMultiplier);
+                pVars.playerRB.AddForce(moveForce * pVars.playerRB.mass * transform.right  * -Mag.x * countermovementMultiplier);
             if (y == 0 && Mag.y != 0)
-                pVars.playerRB.AddForce(moveForce * pVars.playerRB.mass * transform.forward * Time.deltaTime * -Mag.y * countermovementMultiplier);
+                pVars.playerRB.AddForce(moveForce * pVars.playerRB.mass * transform.forward * -Mag.y * countermovementMultiplier);
         }
 
     }
@@ -102,8 +102,8 @@ public class WalkScript : MonoBehaviour
             CounterMovement(pVars.x, pVars.y, horizontalVel);
 
         if (pVars.y != 0 && horizontalVel.y < pVars.maxVelocity)
-            pVars.playerRB.AddForce(transform.forward * pVars.y * moveForce * pVars.playerRB.mass * Time.fixedDeltaTime);
+            pVars.playerRB.AddForce(transform.forward * pVars.y * moveForce * pVars.playerRB.mass );
         if (pVars.x != 0 && horizontalVel.x < pVars.maxVelocity)
-            pVars.playerRB.AddForce(transform.right * pVars.x * moveForce * pVars.playerRB.mass * Time.fixedDeltaTime);
+            pVars.playerRB.AddForce(transform.right * pVars.x * moveForce * pVars.playerRB.mass );
     }
 }

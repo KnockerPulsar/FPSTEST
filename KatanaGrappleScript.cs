@@ -25,6 +25,7 @@ public class KatanaGrappleScript : MonoBehaviour
     GameObject spawnedObj;                           //A reference to the spawned feedback object, used to move/destory it.
     float GrappleSlerpVal = 0;                       //A float used to interpolate between the katana's rotation and it's original rotation to return it to it's initial rotation after grappling.
     Animator katanaAnimator;                         //The animator of the katana, used to disable and enable itself so that animations can't play while grappling.
+    RaycastHit[] hits;                               //The hits of the grapple raycast.
 
     // Start is called before the first frame update
     //Caches the katana's starting rotation, the weapon system, the line component, the line material and the animator.
@@ -44,7 +45,6 @@ public class KatanaGrappleScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             Grapple();
-            line.enabled = true;
         }
         //Stops grappling once the player lifts the right mouse button
         if (Input.GetKeyUp(KeyCode.Mouse1))
@@ -87,17 +87,19 @@ public class KatanaGrappleScript : MonoBehaviour
     //grapple, if so, adds a joint to the player with the other end at the grappling point, and finally, positions the lineRenderer.
     private void Grapple()
     {
+        
         if (wepSys.hasWeapon[(int)WeaponCodes.katana] && wepSys.currentWeaponScript.WeaponState_Script == (int)WeaponState.idle)
         {
+            print("Grapple");
+            //Casts a ray and sees if it intersects with anything
+            hits = Physics.RaycastAll(pVars.playerCam.transform.position, pVars.playerCam.transform.forward.normalized, grappleRange);
+            if (hits.Length < 1) return;
+
             wepSys.currentWeaponScript.WeaponState_Script = (int)WeaponState.grappling;
             katanaAnimator.enabled = false;
             pVars.isGrappling = true;
+            line.enabled = true;
             grappleOrigin = grappleOriginObj.transform.position;
-
-            print("Grapple");
-            //Casts a ray and sees if it intersects with anything
-            RaycastHit[] hits = Physics.RaycastAll(grappleOrigin, pVars.playerCam.transform.forward.normalized, grappleRange);
-            if (hits.Length < 1) return;
 
             grapplePoint = hits[0].point;                           //Finds the first intersection
             joint = pVars.player.AddComponent<SpringJoint>();       //Adds a spring joint to the player
