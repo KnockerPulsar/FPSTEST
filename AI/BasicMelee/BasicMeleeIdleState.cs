@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 
 //Responsible for providing visual feedback that the enemy is idle and checking whether the player has come in vision and in range.
-public class IdleState : StateInterface
+public class BasicMeleeIdleState : StateInterface
 {
     private PlayerVariables pVars;                  //A container responsible for storing commonly used / shared variables. Passed on from the main script.
     private AnimationCurve floatCurve;              //The curve the enemy's y position should follow. 
@@ -14,7 +14,7 @@ public class IdleState : StateInterface
     public float playerAngle;                       //The angle between the front vector of the enemy and the player.
     public float playerDistance;                    //The distance between the enemy and the player.
 
-    public IdleState(GameObject parentEntitiy, AnimationCurve idleFloatingCurve, PlayerVariables inputpVars)
+    public BasicMeleeIdleState(GameObject parentEntitiy, AnimationCurve idleFloatingCurve, PlayerVariables inputpVars)
     {
         entity = parentEntitiy;
         floatCurve = idleFloatingCurve;

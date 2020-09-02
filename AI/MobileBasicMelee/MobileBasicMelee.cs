@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 //Responsible for maintaing the state machine for the enemy (BasicMelee for now), the states and their transitions.
-public class BasicMelee : MonoBehaviour
+public class MobileBasicMelee : MonoBehaviour
 {
     public PlayerVariables pVars;                           //A container responsible for storing commonly used / shared variables.
 
@@ -21,6 +21,9 @@ public class BasicMelee : MonoBehaviour
     public float movementSpeed;                             //The movement speed of the enemy.
     public float jumpCheckIterations;                       //Aprroximately how many meters up the jumpCheckTop should originate from. Passed on from the main script.
     public float stoppingDist;                              //The distance at which the enemy starts attacking the player.
+    public float dashChance = 0.2f;                         //The chance the enemy will dash.
+    public float dashCooldown = 1f;                         //The length of time between dashes.
+    public float dashLength = 0.2f;                         //The length of time the enemy will dash before continuing its movement.
 
     [Header("Attack")]
     public ParticleSystem attackPS;                         //A particle system used as visual feedback to indicate that the enemy is attacking.
@@ -32,9 +35,9 @@ public class BasicMelee : MonoBehaviour
     public float afterAttackDelay = 1f;                     //The delay after the attack before re-entering the state again or switching to another state.
 
     private StateMachine stateMachine;                      //The state machine responsible for maintaining the different states/behaviours of the enemy.
-    private BasicMeleeIdleState idleState;                            //The idle behaviour of the enemy. Ticks only when the player is out of range/not seen by the enemy.
-    private BasicMeleeChaseState chaseState;                          //The chase behaviour of the enemy. Ticks when the player is in range but not in stoppingDist.
-    private BasicMeleeAttackState attackState;                        //The attack behaviour of the enemy. Ticks when the player is closer than the stopping distance.
+    private BasicMeleeIdleState idleState;                  //The idle behaviour of the enemy. Ticks only when the player is out of range/not seen by the enemy.
+    private MobileBasicMeleeChaseState chaseState;          //The chase behaviour of the enemy. Ticks when the player is in range but not in stoppingDist.
+    private BasicMeleeAttackState attackState;              //The attack behaviour of the enemy. Ticks when the player is closer than the stopping distance.
     private Rigidbody RB;                                   //The rigid body of the enemy, used to move the enemy.
 
 
@@ -45,7 +48,7 @@ public class BasicMelee : MonoBehaviour
         RB = GetComponent<Rigidbody>();
         stateMachine = new StateMachine();
         idleState = new BasicMeleeIdleState(gameObject, idleFloatingCurve, pVars);
-        chaseState = new BasicMeleeChaseState(gameObject, movementSpeed, stoppingDist, jumpCheckIterations, RB, checkObj, pVars);
+        chaseState = new MobileBasicMeleeChaseState(gameObject, movementSpeed, stoppingDist, jumpCheckIterations, dashChance, dashCooldown, dashLength, RB, checkObj, pVars);
         attackState = new BasicMeleeAttackState(beforeAttackDelay, rotationDuration, particleDelay, afterAttackDelay, gameObject, RB, smile, poker, attackPS, pVars);
 
         //Setting up the transitions

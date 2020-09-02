@@ -13,6 +13,7 @@ public class KatanaWeaponScript : BaseWeaponScript2
     Vector3 dashFinal;
     Camera playerCam;
     RaycastHit[] hitObjects;
+    public GameObject hitMarker;
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +43,7 @@ public class KatanaWeaponScript : BaseWeaponScript2
             if(hitObjects.Length > 0 && hitObjects[0].transform.gameObject.CompareTag("Enemy"))
             {
                 print("Enemy hit");
+                hitMarker.GetComponent<Animator>().SetTrigger("Show");
                 Destroy(hitObjects[0].transform.gameObject);
             }
 

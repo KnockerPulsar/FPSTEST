@@ -10,6 +10,7 @@ public class PlayerVariableInitializer : MonoBehaviour
     //Caches commonly used/ shares variables at the start of the game / level.
     void Awake()
     {
+        QualitySettings.vSyncCount = 0;
         pVars.playerCapsule = GetComponent<CapsuleCollider>();
         pVars.playerRB = GetComponent<Rigidbody>();
         pVars.player = GameObject.FindGameObjectWithTag("Player");

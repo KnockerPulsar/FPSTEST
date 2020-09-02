@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Responsible for providing visual feedback and raycasting to damage the player.
-public class AttackState : StateInterface
+public class BasicMeleeAttackState : StateInterface
 {
     public bool attackFinished = false;             //Whether or not the attack has finished.
 
@@ -32,7 +32,7 @@ public class AttackState : StateInterface
     //Phase 3, Some delay before the next attack.
     //Phase 2.5, does a raycast to detect if the player is hit, here we should damage the player if the raycast hit.
 
-    public AttackState(float inputBeforeAttackDelay, float inputRotationDuration, float inputParticleDelay, float inputAfterAttackDelay,
+    public BasicMeleeAttackState(float inputBeforeAttackDelay, float inputRotationDuration, float inputParticleDelay, float inputAfterAttackDelay,
                                     GameObject inputEntity, Rigidbody inputRB, GameObject inputSmile, GameObject inputPoker, ParticleSystem inputAttackPS, PlayerVariables inputPVars)
     {
         beforeAttackDelay = inputBeforeAttackDelay;
@@ -100,9 +100,11 @@ public class AttackState : StateInterface
     public void OnEnter()
     {
         //Switches the smile to a pokerface.
-        smile.SetActive(false);
-        poker.SetActive(true);
-        
+        if (smile)
+            smile.SetActive(false);
+        if (poker)
+            poker.SetActive(true);
+
         //Calculates the times.
         rotationEnd = beforeAttackDelay + rotationDuration;
         attackLength = rotationEnd + afterAttackDelay;
@@ -111,8 +113,10 @@ public class AttackState : StateInterface
     public void OnExit()
     {
         //Cleanup.
-        smile.SetActive(true);
-        poker.SetActive(false);
+        if (smile)
+            smile.SetActive(true);
+        if (poker)
+            poker.SetActive(false);
         attackFinished = false;
         hit = null;
         timer = 0;
