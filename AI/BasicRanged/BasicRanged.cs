@@ -6,8 +6,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-//Responsible for maintaing the state machine for the enemy (BasicMelee for now), the states and their transitions.
-public class BasicRanged : MonoBehaviour
+//Responsible for maintaing the state machine for the enemy, the states and their transitions.
+public class BasicRanged : BaseAIStateMachine
 {
     public PlayerVariables pVars;                           //A container responsible for storing commonly used / shared variables.
 

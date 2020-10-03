@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/PlayerVariables", order = 1)]
 public class PlayerVariables : ScriptableObject
 {
+    public PlayerHealthManager pHM;
     public CapsuleCollider playerCapsule;       //The player's collision capsule, used for groundchecking among other things.
     public Rigidbody playerRB;                  //The player's rigid body, used to apply forces and velocities.
     public GameObject player;                   //The player's game object, used to get position and rotation.
@@ -23,4 +24,14 @@ public class PlayerVariables : ScriptableObject
     public bool jumping;                        //Did the player tap the spacebar?
     public bool spaceHeld = false;              //Is the player holding down the spacebar?
     public float secondsSinceLevelStart;        //What's the time since the player spawned?
+
+
+    public Vector3 playerPos => player.transform.position;
+    public CapsuleCollider playerCap => player.GetComponent<CapsuleCollider>();
+    public float playerHealth => pHM.currentHealth;
+    public float playerMaxHealth => pHM.maxHealth;
+    public Vector3 inFrontOfCam => playerCam.transform.position + playerCam.transform.forward;
+    public Vector3 cameraPos => playerCam.transform.position;
+    public Vector3 cameraFwd => playerCam.transform.forward;
+
 }

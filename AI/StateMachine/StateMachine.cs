@@ -8,7 +8,8 @@ using UnityEngine;
 
 public class StateMachine
 {
-    private StateInterface currentState;                                        //The current state the entity is in.                                  
+    public bool alive = true;
+    public StateInterface currentState;                                        //The current state the entity is in.                                  
     private Dictionary<Type, List<Transition>> transitions =                    //A list of transitions sorted with the state type as the key.
                                 new Dictionary<Type, List<Transition>>();
     private List<Transition> currentTransitions = new List<Transition>();       //The list of the possible tranistions from the current state.
@@ -17,6 +18,9 @@ public class StateMachine
 
     public void Tick()
     {
+        if (!alive)
+            return;
+
         var transition = GetTransition();
         if (transition != null)
             SetState(transition.To);

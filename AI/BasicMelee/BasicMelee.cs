@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 //Responsible for maintaing the state machine for the enemy (BasicMelee for now), the states and their transitions.
-public class BasicMelee : MonoBehaviour
+public class BasicMelee : BaseAIStateMachine
 {
     public PlayerVariables pVars;                           //A container responsible for storing commonly used / shared variables.
 
@@ -26,6 +26,7 @@ public class BasicMelee : MonoBehaviour
     public ParticleSystem attackPS;                         //A particle system used as visual feedback to indicate that the enemy is attacking.
     public GameObject smile;                                //The smile indicating that the enemy is not in the attack state.
     public GameObject poker;                                //The poker face indicating that the enemy is in the attack state.
+    public float damage = 10f;
     public float beforeAttackDelay = 0;                     //The initial delay before the attack rotation starts.
     public float rotationDuration = 0.25f;                  //The length of the rotation animation.
     public float particleDelay = 0.175f;                    //How long after finishing the rotation should the particle effect be visible for?
@@ -46,7 +47,7 @@ public class BasicMelee : MonoBehaviour
         stateMachine = new StateMachine();
         idleState = new BasicMeleeIdleState(gameObject, idleFloatingCurve, pVars);
         chaseState = new BasicMeleeChaseState(gameObject, movementSpeed, stoppingDist, jumpCheckIterations, RB, checkObj, pVars);
-        attackState = new BasicMeleeAttackState(beforeAttackDelay, rotationDuration, particleDelay, afterAttackDelay, gameObject, RB, smile, poker, attackPS, pVars);
+        attackState = new BasicMeleeAttackState(damage, beforeAttackDelay, rotationDuration, particleDelay, afterAttackDelay, gameObject, RB, smile, poker, attackPS, pVars);
 
         //Setting up the transitions
         AT(idleState, chaseState, PlayerDetected());        //idleState -> chaseState

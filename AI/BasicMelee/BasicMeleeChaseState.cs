@@ -21,6 +21,7 @@ public class BasicMeleeChaseState : StateInterface
     RaycastHit[] jumpCheckTop;                      //Same as jumpCheckBottom but for the top.
     float HVelocityMag = 0;                         //A variable used to store the horizontal velocity of the player, Used for climbing.
     bool canClimb;                                  //A variable used to indicate that the enemy should climb up.
+    float heightOffset = 1.5f;
 
     //How the climb check works:
     //If the enemy's velocity is low enough, it checks if something is in front of the enemy.
@@ -63,7 +64,7 @@ public class BasicMeleeChaseState : StateInterface
         {
             jumpCheckBottom = Physics.RaycastAll(checkObj.transform.position - 0.05f * Vector3.up, entity.transform.forward, 2f);
             Debug.DrawRay(checkObj.transform.position, entity.transform.forward * 2, Color.red, 3f);
-            
+
             //If the cast hits something that's not the player, proceeds to do the top check.
             if (jumpCheckBottom.Length > 0 && !jumpCheckBottom[0].collider.CompareTag("Player"))
             {
@@ -92,16 +93,17 @@ public class BasicMeleeChaseState : StateInterface
 
         //If not and the player is far enough, continues following.
         if (!canClimb && playerDistance > stoppingDist)
+        {
             RB.velocity = (enemyPlayerVec * movementSpeed);
-        
+
+            //Applies gravity if the enemy is too far high off the ground.
+            if (!Physics.Raycast(entity.transform.position, -entity.transform.up, heightOffset))
+                RB.velocity += Physics.gravity;
+        }
+
         //Otherwise, stops the enemy for the attack state.
         else if (playerDistance <= stoppingDist)
             RB.velocity = Vector3.zero;
-
-        //Applies extra gravity because for some reason the already existing gravity isn't enough?
-        RB.velocity -= new Vector3(0, 98.1f / 20f, 0);
-
-
     }
 
     public void OnEnter() { }

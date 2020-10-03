@@ -23,8 +23,8 @@ public class DashScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(!DashIndicator)
-             DashIndicator = GameObject.Find("Dash Indicator").GetComponent<Image>();
+        if (!DashIndicator)
+            DashIndicator = GameObject.Find("Dash Indicator").GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -79,6 +79,17 @@ public class DashScript : MonoBehaviour
     {
         pVars.isDashing = false;
         DashIndicator.enabled = true;
+    }
+
+
+    private void OnEnable()
+    {
+        DashIndicator.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        DashIndicator.enabled = false;
     }
 
 }

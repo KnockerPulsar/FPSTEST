@@ -16,7 +16,7 @@ public class WeaponSystemScript : MonoBehaviour
     public bool[] hasWeapon = { true, false, false };
     public BaseWeaponScript2 currentWeaponScript;
     GameObject AmmoText;
-    int keyPressed;
+    public bool switchedWeapons;
 
 
     public int currentWeapon;
@@ -26,13 +26,10 @@ public class WeaponSystemScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentWeapon = -1;
+
         if (!(hasWeapon[0] || hasWeapon[1] || hasWeapon[2]))
             currentWeapon = -1;
-        if (SceneManager.GetActiveScene().buildIndex == 2)
-        {
-            currentWeapon = (int)WeaponCodes.katana;
-            hasWeapon[(int)WeaponCodes.katana] = true;
-        }
 
         if (!weapons[(int)WeaponCodes.katana])
             weapons[(int)WeaponCodes.katana] = GameObject.FindGameObjectWithTag("PlayerKatana");
@@ -43,20 +40,22 @@ public class WeaponSystemScript : MonoBehaviour
 
         previousWeapon = currentWeapon;
 
-        for (int i = 0; i < weapons.Length; i++)
+        int i = 0;
+        foreach (GameObject weapon in weapons)
         {
-            if (i != currentWeapon)
-            {
-                weapons[i].SetActive(false);
-            }
-            else
+            if (i == currentWeapon)
             {
                 weapons[i].SetActive(true);
                 currentWeaponScript = weapons[i].GetComponent<BaseWeaponScript2>();
             }
+            else
+                weapons[i].SetActive(false);
+
+            i++;
         }
-        if(currentWeaponScript)
-            currentWeaponScript.WeaponState_Script = (int)WeaponState.idle;
+
+        if (currentWeaponScript)
+            currentWeaponScript.currentWeaponState = (int)WeaponState.idle;
 
         AmmoText = GameObject.Find("AmmoText");
         if (AmmoText && currentWeapon < 2)
@@ -66,50 +65,59 @@ public class WeaponSystemScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SwitchWeapons();
+        CheckForWeaponSwitch();
+
+        if (switchedWeapons)
+            SwitchWeapons();
+
         ShootWeapon();
 
     }
 
     void SwitchWeapons()
     {
-        keyPressed = -1;
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                print("Katana");
-                keyPressed = 0;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                print("Revolver");
-                keyPressed = 1;
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                print("Shotgun");
-                keyPressed = 2;
-            }
-            if (keyPressed != -1)
-            {
-                previousWeapon = currentWeapon;
-                currentWeapon = keyPressed;
+        if(!hasWeapon[currentWeapon])
+            return;
 
-                weapons[previousWeapon].SetActive(false);
-                weapons[currentWeapon].SetActive(true);
-                currentWeaponScript = weapons[currentWeapon].GetComponent<BaseWeaponScript2>();
-                currentWeaponScript.WeaponState_Script = (int)WeaponState.idle;
+        switchedWeapons = false;
 
-                if (currentWeapon == (int)WeaponCodes.katana)
-                    AmmoText.SetActive(false);
-            }
-        }
+        if (previousWeapon >= 0 && previousWeapon < weapons.Length)
+            weapons[previousWeapon].SetActive(false);
+        weapons[currentWeapon].SetActive(true);
+        currentWeaponScript = weapons[currentWeapon].GetComponent<BaseWeaponScript2>();
+        currentWeaponScript.currentWeaponState = (int)WeaponState.idle;
+
+        if (currentWeapon == (int)WeaponCodes.katana)
+            AmmoText.SetActive(false);
     }
     void ShootWeapon()
     {
         if (currentWeaponScript && Input.GetKeyDown(KeyCode.Mouse0))
             currentWeaponScript.Shoot();
+    }
+
+    void CheckForWeaponSwitch()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            previousWeapon = currentWeapon;
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                print("Katana");
+                currentWeapon = 0;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                print("Revolver");
+                currentWeapon = 1;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                print("Shotgun");
+                currentWeapon = 2;
+            }
+            switchedWeapons = true;
+        }
     }
 
 }

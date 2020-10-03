@@ -30,7 +30,8 @@ public class MobileBasicMeleeChaseState : StateInterface
     Vector3 dashVector;                             //A vector used to store the dash direction.
     float moveTimer = 0;                            //A vector used to store the next time the enemy is supposed to continue it's movement.
     float dir;                                      //A float that stores a random number between -1 and 1 which determines whether the enemy will dash forward, right or left.
-
+    float heightOffset = 2f;
+    RaycastHit[] heightOffsetHits;
 
 
     //How the climb check works:
@@ -53,6 +54,7 @@ public class MobileBasicMeleeChaseState : StateInterface
 
     public void Tick()
     {
+
         //Calculating the horizontal enemy-player vector and normalizing it.
         enemyPlayerVec = pVars.player.transform.position - entity.transform.position;
         enemyPlayerVec.y = 0;
@@ -133,7 +135,14 @@ public class MobileBasicMeleeChaseState : StateInterface
             if (Time.time >= moveTimer)
             {
                 if (playerDistance > stoppingDist)
+                {
                     RB.velocity = (enemyPlayerVec * movementSpeed);
+
+                    //Applies gravity if the enemy is too far high off the ground.
+                    if (!Physics.Raycast(entity.transform.position, -entity.transform.up, heightOffset))
+                        RB.velocity += Physics.gravity / 10f;
+                }
+
                 else
                     RB.velocity = Vector3.zero;
             }
@@ -142,9 +151,6 @@ public class MobileBasicMeleeChaseState : StateInterface
         //Otherwise, stops the enemy for the attack state.
         else if (playerDistance <= stoppingDist)
             RB.velocity = Vector3.zero;
-
-        //Applies extra gravity because for some reason the already existing gravity isn't enough?
-        RB.velocity -= new Vector3(0, 98.1f / 20f, 0);
     }
 
     public void OnEnter()

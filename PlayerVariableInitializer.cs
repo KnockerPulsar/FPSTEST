@@ -14,11 +14,14 @@ public class PlayerVariableInitializer : MonoBehaviour
         pVars.playerCapsule = GetComponent<CapsuleCollider>();
         pVars.playerRB = GetComponent<Rigidbody>();
         pVars.player = GameObject.FindGameObjectWithTag("Player");
+        if (!Camera.main.gameObject)
+            print("A");
         pVars.playerCam = Camera.main.gameObject;
-        pVars.playerCamParent = GameObject.Find("Camera");
+        pVars.playerCamParent = GameObject.Find("Cameras");
         pVars.isCrouching = false;
         pVars.isDashing = false;
         pVars.secondsSinceLevelStart = 0;
+        pVars.pHM = GetComponent<PlayerHealthManager>();
     }
 
 
@@ -26,7 +29,7 @@ public class PlayerVariableInitializer : MonoBehaviour
     private void Update()
     {
         pVars.isGrounded[0] = pVars.isGrounded[1];
-        pVars.isGrounded[1] = Physics.Raycast(transform.position, transform.up * -1f, pVars.playerCapsule.height * 2f);
+        pVars.isGrounded[1] = Physics.Raycast(transform.position, transform.up * -1f, pVars.playerCapsule.height / 1.7f);
         pVars.jumping = Input.GetKeyDown(KeyCode.Space);
         pVars.spaceHeld = Input.GetKey(KeyCode.Space);
         pVars.x = Input.GetAxisRaw("Horizontal");

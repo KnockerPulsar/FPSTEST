@@ -1,4 +1,4 @@
-﻿    using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,8 +12,8 @@ public class WallclimbingScript : MonoBehaviour
     //If the player is holding down the space bar, checks and initiates wallclimbing.
     void Update()
     {
-        if(pVars.spaceHeld)
-          Wallclimb();
+        if (pVars.spaceHeld)
+            Wallclimb();
     }
 
     //Checks if whatever's in front of the player is a climable object and if so, it updates the climbing boolean and sets the players vertical velocity to the wallClimbYVel variable's value.
@@ -24,20 +24,25 @@ public class WallclimbingScript : MonoBehaviour
         if (!pVars.isWallrunning)
         {
             inFront = Physics.RaycastAll(transform.position - new Vector3(0, pVars.playerCapsule.height, 0), transform.forward, 3f);
-            if (inFront.Length > 0 && inFront[0].collider.CompareTag("Climbable"))
-            {
-                if (!pVars.isClimbing)
-                    pVars.isClimbing = true;
+            Debug.DrawRay(transform.position - new Vector3(0, pVars.playerCapsule.height, 0), transform.forward * 3f, Color.red, 3f);
 
-                //Debug.Log("Checking for climbables");
 
-                //Adds some upwards velocity to mimic climbing
-                //Could be done by setting the velocity for more consistent velocity
-                //Debug.Log("Found something climbable");
-                //Zeros the forward velocity to prevent getting stuck
-                pVars.playerRB.velocity = new Vector3(0, wallClimbYVel, pVars.playerRB.velocity.z);
-                
-            }
+            //if (inFront.Length > 0 && inFront[0].collider.CompareTag("Climbable"))
+            foreach (RaycastHit hit in inFront)
+                if (hit.collider.CompareTag("Climbable"))
+                {
+                    if (!pVars.isClimbing)
+                        pVars.isClimbing = true;
+
+                    //Debug.Log("Checking for climbables");
+
+                    //Adds some upwards velocity to mimic climbing
+                    //Could be done by setting the velocity for more consistent velocity
+                    //Debug.Log("Found something climbable");
+                    //Zeros the forward velocity to prevent getting stuck
+                    pVars.playerRB.velocity = new Vector3(0, wallClimbYVel, pVars.playerRB.velocity.z);
+
+                }
             if (!pVars.spaceHeld || inFront == null || inFront.Length == 0 || !inFront[0].collider.CompareTag("Climbable"))
                 pVars.isClimbing = false;
         }

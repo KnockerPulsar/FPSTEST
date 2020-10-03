@@ -18,6 +18,7 @@ public class BasicMeleeAttackState : StateInterface
     Vector3 enemyPlayerVec;                         //The normalized vector originating at the enemy and ending at the player. Used for moving the enemy and rotating it. 
 
     float timer = 0;                                //A timer used to keep track of the attack progress.
+    float damage = 10f;
     float beforeAttackDelay = 0;                    //The initial delay before the attack rotation starts.
     float rotationDuration = 0.25f;                 //The length of the rotation animation.
     float rotationEnd;                              //When the rotation should end relative to the attack start time.
@@ -32,11 +33,11 @@ public class BasicMeleeAttackState : StateInterface
     //Phase 3, Some delay before the next attack.
     //Phase 2.5, does a raycast to detect if the player is hit, here we should damage the player if the raycast hit.
 
-    public BasicMeleeAttackState(float inputBeforeAttackDelay, float inputRotationDuration, float inputParticleDelay, float inputAfterAttackDelay,
+    public BasicMeleeAttackState(float inputDamage, float inputBeforeAttackDelay, float inputRotationDuration, float inputParticleDelay, float inputAfterAttackDelay,
                                     GameObject inputEntity, Rigidbody inputRB, GameObject inputSmile, GameObject inputPoker, ParticleSystem inputAttackPS, PlayerVariables inputPVars)
     {
+        damage = inputDamage;
         beforeAttackDelay = inputBeforeAttackDelay;
-
         entity = inputEntity;
         RB = inputRB;
         smile = inputSmile;
@@ -61,11 +62,17 @@ public class BasicMeleeAttackState : StateInterface
             //If the enemy is in the middle of phase 2 (hitting), does the ray cast.
             if (timer <= rotationEnd - 0.5 * rotationDuration + 1 * Time.deltaTime && timer >= rotationEnd - 0.5 * rotationDuration)
             {
-                Debug.Log("Raycast");
-                hit = Physics.RaycastAll(-(entity.transform.position + entity.transform.forward * 3)/*+ Vector3.up * 2*/, -(entity.transform.forward), 4f);
-                Debug.DrawRay(-(entity.transform.position + entity.transform.forward * 3), -(entity.transform.forward * 4), Color.red, 10f);
+                //Debug.Log("Raycast");
+                hit = Physics.RaycastAll((entity.transform.position - entity.transform.forward)/*+ Vector3.up * 2*/, -(entity.transform.forward), 4f);
+                Debug.DrawRay((entity.transform.position - entity.transform.forward), -(entity.transform.forward * 4), Color.red, 10f);
                 if (hit.Length > 0 && hit[0].collider.CompareTag("Player"))
+                {
                     Debug.Log("Player hit"); //Player damage code here.
+
+                    PlayerHealthManager playerHM = hit[0].collider.GetComponent<PlayerHealthManager>();
+                    if (playerHM != null)
+                        playerHM.RecieveDamage(damage);
+                }
             }
 
             //Rotates the enemy

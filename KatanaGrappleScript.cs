@@ -65,7 +65,7 @@ public class KatanaGrappleScript : MonoBehaviour
             {
                 print("Animator activated");
                 katanaAnimator.enabled = true;
-                GetComponent<BaseWeaponScript2>().WeaponState_Script = (int)WeaponState.idle;
+                GetComponent<BaseWeaponScript2>().currentWeaponState = (int)WeaponState.idle;
             }
         }
 
@@ -87,15 +87,15 @@ public class KatanaGrappleScript : MonoBehaviour
     //grapple, if so, adds a joint to the player with the other end at the grappling point, and finally, positions the lineRenderer.
     private void Grapple()
     {
-        
-        if (wepSys.hasWeapon[(int)WeaponCodes.katana] && wepSys.currentWeaponScript.WeaponState_Script == (int)WeaponState.idle)
+        print("G");
+        if (wepSys.hasWeapon[(int)WeaponCodes.katana] && wepSys.currentWeaponScript.currentWeaponState == (int)WeaponState.idle)
         {
             print("Grapple");
             //Casts a ray and sees if it intersects with anything
             hits = Physics.RaycastAll(pVars.playerCam.transform.position, pVars.playerCam.transform.forward.normalized, grappleRange);
             if (hits.Length < 1) return;
 
-            wepSys.currentWeaponScript.WeaponState_Script = (int)WeaponState.grappling;
+            wepSys.currentWeaponScript.currentWeaponState = (int)WeaponState.grappling;
             katanaAnimator.enabled = false;
             pVars.isGrappling = true;
             line.enabled = true;
@@ -124,7 +124,7 @@ public class KatanaGrappleScript : MonoBehaviour
         //Calculates the new direction for the gun
         //Interpolates between the previous and current rotations based on the velocity
         Quaternion lookdir = Quaternion.LookRotation(dir) * baseGunRotation;
-        transform.up = Vector3.Slerp(transform.up, -dir, Time.deltaTime * pVars.playerRB.velocity.magnitude / 2f);
+        transform.forward = Vector3.Slerp(transform.forward, -dir, Time.deltaTime * pVars.playerRB.velocity.magnitude / 2f);
 
 
         //Updates the line renderer positions and sets them
@@ -138,7 +138,7 @@ public class KatanaGrappleScript : MonoBehaviour
     {
         if (wepSys.currentWeaponScript)
         {
-            wepSys.currentWeaponScript.WeaponState_Script = (int)WeaponState.idle;
+            wepSys.currentWeaponScript.currentWeaponState = (int)WeaponState.idle;
             line.enabled = false;
             pVars.isGrappling = false;
             Destroy(joint);
