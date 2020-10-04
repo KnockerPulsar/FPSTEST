@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using PathCreation.Examples;
+using UnityEditor;
 
 
 public class PipeMeshCreator : PathSceneTool
@@ -290,7 +290,9 @@ public class PipeMeshCreator : PathSceneTool
 
         for (int i = debugIndeciesRange.x; i < debugIndeciesRange.y; i++)
         {
-            Handles.Label(debugVertsArr[i], debugIndices[i].ToString());
+            #if UNITY_EDITOR
+                 Handles.Label(debugVertsArr[i], debugIndices[i].ToString());
+            #endif
         }
     }
 

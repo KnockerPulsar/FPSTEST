@@ -64,7 +64,7 @@ public class KatanaWeaponPickup : BasePickup
 
     private void Start()
     {
-        print(Camera.main.GetComponents<Volume>().Length);
+        //print(Camera.main.GetComponents<Volume>().Length);
         ppVol = Camera.main.GetComponents<Volume>()[1];
     }
 

@@ -5,7 +5,21 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
     public bool activated = false;
+    public float interactionTriggerRadius = 8f;
     protected Interact pI;
+
+    SphereCollider interactionTrigger;
+
+    private void Start()
+    {
+        interactionTrigger = GetComponent<SphereCollider>();
+        if (!interactionTrigger)
+        {
+            interactionTrigger = gameObject.AddComponent<SphereCollider>();
+            interactionTrigger.isTrigger = true;
+            interactionTrigger.radius = interactionTriggerRadius;
+        }
+    }
 
     public virtual void Interact()
     {
@@ -16,7 +30,8 @@ public class Interactable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        print("P");
+        if (other.CompareTag("Player"))
         {
             pI = other.GetComponent<Interact>();
             if (pI)
