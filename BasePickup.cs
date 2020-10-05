@@ -8,6 +8,7 @@ public class BasePickup : MonoBehaviour
     public AudioSource audioSource;
     public float pickupDelay = 0.5f;
 
+    protected GameObject player;
     bool active = false;
 
     private void Start()
@@ -22,6 +23,7 @@ public class BasePickup : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            player = other.gameObject;
             if (pickupMesh)
                 pickupMesh.SetActive(false);
             if (audioSource)

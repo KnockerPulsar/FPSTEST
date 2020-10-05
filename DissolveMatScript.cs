@@ -10,7 +10,7 @@ public class DissolveMatScript : MonoBehaviour
     public dissolveDirection dir = (int)dissolveDirection.topToBot;
     public float fadeValue = 0;
     public float fadeSpeed = 1;
-    public float maxFade = 4;
+    [SerializeField] public float maxFade = 10;
     public Color fadeColor = Color.white;
     public float edgeThickness = -0.02f;
     public bool multiMaterials = false;
@@ -93,6 +93,7 @@ public class DissolveMatScript : MonoBehaviour
     IEnumerator DissolveOut()
     {
         dissolving = true;
+        fadeValue = -maxFade;
         while (fadeValue <= maxFade)
         {
             foreach (Material material in mat)
@@ -103,14 +104,13 @@ public class DissolveMatScript : MonoBehaviour
 
             yield return null;
         }
-        fadeValue = 0;
         dissolving = false;
     }
     IEnumerator dissolveIn()
     {
         dissolving = true;
         fadeValue = maxFade;
-        while (fadeValue >= 0)
+        while (fadeValue >= -maxFade)
         {
             foreach (Material material in mat)
             {
@@ -120,7 +120,6 @@ public class DissolveMatScript : MonoBehaviour
 
             yield return null;
         }
-        fadeValue = 0;
         dissolving = false;
     }
 

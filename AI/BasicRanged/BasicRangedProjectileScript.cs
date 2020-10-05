@@ -25,7 +25,7 @@ public class BasicRangedProjectileScript : MonoBehaviour
             if (playerHM)
                 playerHM.RecieveDamage(damage);
         }
-        else if (other.CompareTag("Projectile") || other.CompareTag("Enemy"))
+        else if (other.CompareTag("Projectile") || other.CompareTag("Enemy") || other.CompareTag("Arena"))
         {
             print("Hit another projectile");
         }

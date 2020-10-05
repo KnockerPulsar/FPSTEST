@@ -21,7 +21,6 @@ public class JumpScript : MonoBehaviour
     //The jump is dependant on the multiplier and the player's mass and the max velocity the player can walk/run.
     void Jump()
     {
-        pVars.playerRB.AddForce(Vector3.up * jumpForce * pVars.playerRB.mass * pVars.maxVelocity);
-        //print("yikes");
+        pVars.playerRB.AddForce( transform.up * jumpForce * pVars.playerRB.mass);
     }
 }

@@ -34,6 +34,7 @@ public class BasicEnemyHealth : EnemyHealth
         }
         else
             deleteDelay = source.clip.length;
+        MassegeArena();
         Invoke(nameof(EndDeath), deleteDelay);
     }
 
@@ -53,6 +54,20 @@ public class BasicEnemyHealth : EnemyHealth
             pickupSpawnerScript.pickup = deathPickups[0];
             pickupSpawnerScript.spawnCount = Mathf.RoundToInt((pVars.playerMaxHealth - pVars.playerHealth) / 40);
             pickupSpawnerScript.enabled = true;
+        }
+    }
+
+    void MassegeArena()
+    {
+        Collider[] colliders = Physics.OverlapBox(transform.position, Vector3.one);
+        foreach (Collider col in colliders)
+        {
+            Arena arena = col.GetComponent<Arena>();
+            if (arena)
+            {
+                print("Arena found");
+                arena.DecrementEnemyCounter();
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ public class KatanaWeaponPickup : BasePickup
     Volume ppVol;
     public override void InitiatePickup()
     {
-        StartCoroutine(delayedAction(() => { DisableShooting(); }, 2));
+        StartCoroutine(delayedAction(() => { DisableShootingAndMovement(); }, 2));
         weaponSys = GameObject.FindGameObjectWithTag("Player").GetComponent<WeaponSystemScript>();
         if (weaponSys)
         {
@@ -35,18 +35,21 @@ public class KatanaWeaponPickup : BasePickup
             ppVol.enabled = true;
             animator.enabled = true;
             animator.Play(katanaPickupAnim.name);
-            Invoke(nameof(EnableShooting), katanaPickupAnim.length);
+            Invoke(nameof(EnableShootingAndMovement), katanaPickupAnim.length);
         }
     }
 
-    void DisableShooting()
+    void DisableShootingAndMovement()
     {
-        print("D");
+        //print("D");
+        player.GetComponent<WalkScript>().enabled = false;
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
         weaponSys.currentWeaponScript.canShoot = false;
     }
 
-    void EnableShooting()
+    void EnableShootingAndMovement()
     {
+        player.GetComponent<WalkScript>().enabled = true;
         weaponSys.currentWeaponScript.canShoot = true;
         ppVol.enabled = false;
 

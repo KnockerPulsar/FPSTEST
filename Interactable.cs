@@ -30,7 +30,7 @@ public class Interactable : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("P");
+        //print("P");
         if (other.CompareTag("Player"))
         {
             pI = other.GetComponent<Interact>();

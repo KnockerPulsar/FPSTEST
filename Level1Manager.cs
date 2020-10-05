@@ -77,7 +77,7 @@ public class Level1Manager : MonoBehaviour
         UITextAnimator.Play(anim.name + "Fwd");
 
         yield return new WaitForSeconds(anim.length + hideTextAfter);
-        print("b");
+        //print("b");
 
         UITextAnimator.Play(anim.name + "Bck");
 

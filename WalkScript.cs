@@ -28,9 +28,6 @@ public class WalkScript : MonoBehaviour
         Move();
     }
 
-
-    //Fires a raycast based on the WASD keys the player is pressing, returns true if the player has no object in that direction or there's a climbabl/latchable object.
-
     //Finds the velocity relative to the player's forward direction (duh).
     private Vector2 FindVelRelativeToLook()
     {
